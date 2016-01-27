@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="SapBrokerAndBridgeServiceHttpsSoap" startOnLoad="true"
+  trace="disable" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+  <target faultSequence="SapBrokerAndBridgeServiceFaultHandler">
+    <inSequence>
+      <log level="custom" separator=",">
+        <property name="SapBrokerAndBridgeServiceHttpsSoap" value="inSequence called"/>
+      </log>
+      <sequence key="SapBrokerAndBridgeSendReqToSAP"/>
+      <respond/>
+    </inSequence>
+    <outSequence>
+      <log level="custom" separator=",">
+        <property name="SapBrokerAndBridgeServiceHttpsSoap" value="outSequence called"/>
+      </log>
+    </outSequence>
+  </target>
+</proxy>

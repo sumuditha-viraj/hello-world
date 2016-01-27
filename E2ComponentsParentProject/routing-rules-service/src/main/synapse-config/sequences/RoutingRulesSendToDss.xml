@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="RoutingRulesSendToDss" statistics="enable"
+  trace="enable" xmlns="http://ws.apache.org/ns/synapse">
+  <log level="custom" separator=",">
+    <property name="RoutingRulesSendToDss" value="Sequence called"/>
+  </log>
+  <property name="FORCE_ERROR_ON_SOAP_FAULT" scope="default"
+    type="STRING" value="true"/>
+  <property name="HTTP_METHOD" scope="axis2" type="STRING" value="POST"/>
+  <property name="messageType" scope="axis2" type="STRING" value="text/xml"/>
+  <header name="Action" scope="default" value="http://sap.com/xi/WebService/soap1.1"/>
+  <property name="SOAPAction" scope="transport" type="STRING" value="http://sap.com/xi/WebService/soap1.1"/>
+  <property expression="get-property('SYSTEM_TIME')" name="DSS_TIME_1"
+    scope="default" type="LONG"/>
+  <switch source="get-property('messaging_service_id')">
+    <case regex="E2-externe-Service-SOAP-GDC">
+      <log level="custom" separator=",">
+        <property name="Switch-Case" value="E2-externe-Service-SOAP-GDC"/>
+      </log>
+      <log level="full" separator=","/>
+      <call>
+        <endpoint key="EP2RoutingRulesServiceDssSoap"/>
+      </call>
+      <log level="custom" separator=",">
+        <property name="RoutingRulesSendToDss" value="response from RoutingRulesServiceDssSoap received"/>
+      </log>
+    </case>
+    <case regex="E2-externe-Service-JMS-GDC">
+      <log level="custom" separator=",">
+        <property name="Switch-Case" value="E2-externe-Service-JMS-GDC"/>
+      </log>
+      <log level="full" separator=","/>
+      <call>
+        <endpoint key="EP2RoutingRulesServiceDssJms"/>
+      </call>
+      <log level="custom" separator=",">
+        <property name="RoutingRulesSendToDss" value="response from RoutingRulesServiceDssJms received"/>
+      </log>
+    </case>
+    <default>
+      <log level="custom" separator=",">
+        <property name="Switch-Case" value="Invalid value in messaging_service_id."/>
+      </log>
+    </default>
+  </switch>
+</sequence>

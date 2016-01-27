@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="SapBrokerAndBridgeGDCTransformer" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+  <log level="custom">
+    <property name="SapBrokerAndBridgeGDCTransformer" value="Sequence called"/>
+  </log>
+  <property expression="$body/child::node()" name="response_payload"
+    scope="default" type="STRING"/>
+  <log level="custom">
+    <property expression="get-property('response_payload')" name="response_payload"/>
+  </log>
+  <property expression="//messages/code" name="response_or_error_code"
+    scope="default" type="STRING"/>
+  <property expression="//messages/text"
+    name="response_or_error_message" scope="default" type="STRING"/>
+  <property expression="//faultcode" name="fault_code" scope="default" type="STRING"/>
+  <property expression="//faultstring" name="fault_string"
+    scope="default" type="STRING"/>
+  <property
+    expression="get-property('SYSTEM_DATE', 'yyyy-MM-dd HH:mm:ss.ms')"
+    name="date_time" scope="default" type="STRING"/>
+  <log level="custom">
+    <property expression="get-property('date_time')" name="date_time"/>
+    <property expression="get-property('response_or_error_code')" name="response_or_error_code"/>
+    <property expression="get-property('response_or_error_message')" name="response_or_error_message"/>
+    <property expression="get-property('fault_code')" name="fault_code"/>
+    <property expression="get-property('fault_string')" name="fault_string"/>
+  </log>
+  <enrich>
+    <source clone="true" property="RequestBackupAfterAddingTheReceiver" type="property"/>
+    <target type="body"/>
+  </enrich>
+  <enrich>
+    <source clone="true" property="response_or_error_code" type="property"/>
+    <target xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:error/fiscal:code"/>
+  </enrich>
+  <enrich>
+    <source clone="true" property="response_or_error_message" type="property"/>
+    <target xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:error/fiscal:message"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:name"/>
+    <target xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:error/fiscal:system"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:business/fiscal:source/fiscal:application/fiscal:name"/>
+    <target xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:replyTo/fiscal:appId"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:service/fiscal:id"/>
+    <target property="messaging_service_id" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:service/fiscal:operation"/>
+    <target property="operationRequest" type="property"/>
+  </enrich>
+  <switch source="get-property('messaging_service_id')">
+    <case regex="E2-externe-Service-JMS-GDC">
+      <log level="custom" separator=",">
+        <property name="Switch-Case" value="E2-externe-Service-JMS-GDC"/>
+      </log>
+      <enrich>
+        <source clone="true"
+          xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:messageId"/>
+        <target xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:replyTo/fiscal:messageId"/>
+      </enrich>
+      <property name="applicationId" scope="default" type="STRING" value="SAP_SEND_RESPONSES"/>
+      <property name="generatedMessageId" scope="default" type="STRING" value="to be done - generate messageID for SAP reponses for JMS"/>
+      <enrich>
+        <source clone="true" property="applicationId" type="property"/>
+        <target xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:business/fiscal:source/fiscal:application/fiscal:name"/>
+      </enrich>
+      <enrich>
+        <source clone="true" property="generatedMessageId" type="property"/>
+        <target xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:messageId"/>
+      </enrich>
+      <enrich>
+        <source clone="true" property="date_time" type="property"/>
+        <target xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:creationTime"/>
+      </enrich>
+      <switch source="get-property('operationRequest')">
+        <case regex="partnerSearchRequest">
+          <property name="operationResponse" scope="default"
+            type="STRING" value="partnerSearchResponse"/>
+        </case>
+        <case regex="partnerGetRequest">
+          <property name="operationResponse" scope="default"
+            type="STRING" value="partnerGetResponse"/>
+        </case>
+        <case regex="documentCreateRequest">
+          <property name="operationResponse" scope="default"
+            type="STRING" value="documentCreateResponse"/>
+        </case>
+        <case regex="documentClearingRequest">
+          <property name="operationResponse" scope="default"
+            type="STRING" value="documentClearingResponse"/>
+        </case>
+        <case regex="documentClearingReverseRequest">
+          <property name="operationResponse" scope="default"
+            type="STRING" value="documentClearingReverseResponse"/>
+        </case>
+        <case regex="documentReversalRequest">
+          <property name="operationResponse" scope="default"
+            type="STRING" value="documentReversalResponse"/>
+        </case>
+        <case regex="documentTransferRequest">
+          <property name="operationResponse" scope="default"
+            type="STRING" value="documentTransferResponse"/>
+        </case>
+        <case regex="financialDataGetRequest">
+          <property name="operationResponse" scope="default"
+            type="STRING" value="financialDataGetResponse"/>
+        </case>
+        <case regex="lockGetRequest">
+          <property name="operationResponse" scope="default"
+            type="STRING" value="lockGetResponse"/>
+        </case>
+        <case regex="lockMaintainRequest">
+          <property name="operationResponse" scope="default"
+            type="STRING" value="lockMaintainResponse"/>
+        </case>
+        <case regex="partnerChangeRequest">
+          <property name="operationResponse" scope="default"
+            type="STRING" value="partnerChangeResponse"/>
+        </case>
+        <case regex="partnerCreateRequest">
+          <property name="operationResponse" scope="default"
+            type="STRING" value="partnerCreateResponse"/>
+        </case>
+        <case regex="partnerDeleteRequest">
+          <property name="operationResponse" scope="default"
+            type="STRING" value="partnerDeleteResponse"/>
+        </case>
+        <default/>
+      </switch>
+      <enrich>
+        <source clone="true" property="operationResponse" type="property"/>
+        <target xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:service/fiscal:operation"/>
+      </enrich>
+      <log level="custom">
+        <property name="SapBrokerAndBridgeGDCTransformer" value="GDC parameter business/source/application/name set in GDC"/>
+        <property name="SapBrokerAndBridgeGDCTransformer" value="GDC parameter messaging/service/operation set in GDC"/>
+        <property name="SapBrokerAndBridgeGDCTransformer" value="GDC parameter messaging/messageId set in GDC"/>
+        <property name="SapBrokerAndBridgeGDCTransformer" value="GDC parameter creationTime set in GDC"/>
+        <property name="SapBrokerAndBridgeGDCTransformer" value="GDC parameter messaging/replyTo/appId set in GDC"/>
+        <property name="SapBrokerAndBridgeGDCTransformer" value="GDC parameter messaging/replyTo/messageId set in GDC"/>
+      </log>
+    </case>
+    <default/>
+  </switch>
+  <property expression="$body/child::node()" name="request"
+    scope="default" type="STRING"/>
+  <log level="custom">
+    <property expression="get-property('request')" name="request"/>
+  </log>
+  <enrich>
+    <source clone="true" property="ResponseBackup" type="property"/>
+    <target xmlns:fis="http://estv.admin.ch/fiscal/v1_0"
+      xmlns:pl="http://estv.admin.ch/fiscal/exchange/sap" xpath="$body/fis:GDC/pl:payload/child::node()"/>
+  </enrich>
+  <log level="custom">
+    <property expression="$body" name="body after adding response payload"/>
+  </log>
+</sequence>

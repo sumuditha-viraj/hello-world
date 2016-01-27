@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ch.admin.estv.fiscalit.exchange.e2</groupId>
+  <artifactId>E2ComponentsParentProject</artifactId>
+  <version>1.0.0</version>
+  <packaging>pom</packaging>
+  <name>E2ComponentsParentProject</name>
+  <description>E2ComponentsParentProject</description>
+  <modules>
+    <module>router-service-https-soap</module>
+    <module>router-service-jms</module>
+    <module>sap-broker-and-bridge-service</module>
+    <module>routing-rules-service-dss-jms</module>
+    <module>routing-rules-service-dss-management</module>
+    <module>routing-rules-service-dss-soap</module>
+    <module>routing-rules-service</module>
+    <module>endpoints-eislab</module>
+    <module>endpoints-niesen</module>
+    <module>sap-bridge-service-jms</module>
+    <module>auditlog-service</module>
+    <module>auditlog-service-car</module>
+    <module>sap-bridge-service-jms-car</module>
+    <module>endpoints-niesen-car</module>
+    <module>endpoints-eislab-car</module>
+    <module>routing-rules-service-car</module>
+    <module>routing-rules-service-dss-soap-car</module>
+    <module>router-service-https-soap-car</module>
+    <module>router-service-jms-car</module>
+    <module>routing-rules-service-dss-jms-car</module>
+    <module>sap-broker-and-bridge-service-car</module>
+    <module>routing-rules-service-dss-management-car</module>
+  </modules>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.9</version>
+        <configuration>
+          <buildcommands />
+          <projectnatures>
+            <projectnature>org.wso2.developerstudio.eclipse.mavenmultimodule.project.nature</projectnature>
+          </projectnatures>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

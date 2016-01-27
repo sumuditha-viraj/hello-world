@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="RouterServiceHttpsSoap" startOnLoad="true"
+  statistics="enable" trace="enable" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+  <target faultSequence="RouterServiceHttpsSoapFaultHandler">
+    <inSequence>
+      <log level="custom" separator=",">
+        <property name="RouterServiceHttpsSoap" value="inSequence called"/>
+      </log>
+      <enrich>
+        <source clone="true"
+          xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:service/fiscal:id"/>
+        <target property="messaging_service_id" type="property"/>
+      </enrich>
+      <switch source="get-property('messaging_service_id')">
+        <case regex="E2-externe-Service-SOAP-GDC">
+          <log level="custom" separator=",">
+            <property name="Switch-Case" value="E2-externe-Service-SOAP-GDC"/>
+          </log>
+          <property name="FORCE_ERROR_ON_SOAP_FAULT" scope="default"
+            type="STRING" value="true"/>
+          <property name="HTTP_METHOD" scope="axis2" type="STRING" value="POST"/>
+          <property name="messageType" scope="axis2" type="STRING" value="text/xml"/>
+          <header name="Action" scope="default" value="http://sap.com/xi/WebService/soap1.1"/>
+          <property name="SOAPAction" scope="transport" type="STRING" value="http://sap.com/xi/WebService/soap1.1"/>
+          <call>
+            <endpoint key="EP2RoutingRulesService"/>
+          </call>
+          <log level="custom" separator=",">
+            <property name="RouterServiceHttpsSoap" value="response from RoutingRulesService received"/>
+          </log>
+          <log level="full"/>
+          <enrich>
+            <source clone="true"
+              xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:name"/>
+            <target property="receiver_name" type="property"/>
+          </enrich>
+          <log level="custom">
+            <property expression="get-property('receiver_name')" name="receiver_name set with value from DSS ruting rules"/>
+          </log>
+          <enrich>
+            <source clone="true" type="body"/>
+            <target property="RequestBackupAfterAddingTheReceiver" type="property"/>
+          </enrich>
+          <switch source="get-property('receiver_name')">
+            <case regex="SAP">
+              <log level="custom" separator=",">
+                <property name="Switch-Case" value="messaging/receiver/application/name = SAP"/>
+              </log>
+              <property name="FORCE_ERROR_ON_SOAP_FAULT" scope="default"
+                type="STRING" value="true"/>
+              <property name="HTTP_METHOD" scope="axis2" type="STRING" value="POST"/>
+              <property name="messageType" scope="axis2" type="STRING" value="text/xml"/>
+              <header name="Action" scope="default" value="http://sap.com/xi/WebService/soap1.1"/>
+              <property name="SOAPAction" scope="transport"
+                type="STRING" value="http://sap.com/xi/WebService/soap1.1"/>
+              <call>
+                <endpoint key="EP2SapBrokerAndBridgeServiceHttpsSoap"/>
+              </call>
+              <log level="custom" separator=",">
+                <property name="RouterServiceHttpsSoap" value="response from SapBrokerAndBridgeServiceHttpsSoap received"/>
+              </log>
+              <log category="DEBUG" level="full"/>
+            </case>
+            <default>
+              <log level="custom" separator=",">
+                <property name="Switch-Case" value="messaging/receiver/application/name = Invalid value. Currently only SAP allowed value"/>
+              </log>
+            </default>
+          </switch>
+        </case>
+        <case regex="E2-externe-Service-JMS-GDC">
+          <log level="custom" separator=",">
+            <property name="Switch-Case" value="E2-externe-Service-JMS-GDC"/>
+          </log>
+          <property name="OUT_ONLY" scope="default" type="STRING" value="true"/>
+          <property name="FORCE_SC_ACCEPTED" scope="axis2" type="STRING" value="true"/>
+          <property name="messageType" scope="axis2" type="STRING" value="text/xml"/>
+          <property name="ContentType" scope="axis2" type="STRING" value="text/xml"/>
+          <header name="To" scope="default" value="jms:/E2InQueue?transport.jms.DestinationType=queue"/>
+          <call>
+            <endpoint>
+              <default statistics="enable" trace="enable">
+                <timeout>
+                  <duration>300000</duration>
+                  <responseAction>fault</responseAction>
+                </timeout>
+                <suspendOnFailure>
+                  <errorCodes>-1</errorCodes>
+                  <initialDuration>0</initialDuration>
+                  <progressionFactor>1.0</progressionFactor>
+                  <maximumDuration>0</maximumDuration>
+                </suspendOnFailure>
+                <markForSuspension>
+                  <errorCodes>-1</errorCodes>
+                </markForSuspension>
+              </default>
+            </endpoint>
+          </call>
+          <log level="custom" separator=",">
+            <property name="RouterServiceHttpsSoap" value="Request Sent To E2InQueue"/>
+          </log>
+        </case>
+        <default>
+          <log level="custom" separator=",">
+            <property name="Switch-Case" value="Invalid value in messaging_service_id."/>
+          </log>
+        </default>
+      </switch>
+      <respond/>
+    </inSequence>
+    <outSequence>
+      <log level="custom" separator=",">
+        <property name="RouterServiceHttpsSoap" value="outSequence called"/>
+      </log>
+    </outSequence>
+  </target>
+</proxy>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="RoutingRulesReceiveFromDss" statistics="enable"
+  trace="enable" xmlns="http://ws.apache.org/ns/synapse">
+  <log level="custom" separator=",">
+    <property name="RoutingRulesReceiveFromDss" value="Sequence called, response from DSS received"/>
+  </log>
+  <log level="custom" separator="; ##">
+    <property name="RoutingRulesReceiveFromDss" value="DSS Routing Rules response"/>
+  </log>
+  <log level="full"/>
+  <filter xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xpath="boolean(//soapenv:Body/*[1])">
+    <then>
+      <log level="custom">
+        <property name="STATUS" value="Message Body Available"/>
+      </log>
+    </then>
+    <else>
+      <log level="custom">
+        <property name="STATUS" value="Message Body Blank"/>
+      </log>
+    </else>
+  </filter>
+  <enrich>
+    <source clone="true" xmlns:dss="http://ws.wso2.org/dataservice" xpath="//dss:RoutingEntries/dss:RoutingEntry/dss:receiver_uri"/>
+    <target property="receiver_uri_from_dss" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:dss="http://ws.wso2.org/dataservice" xpath="//dss:RoutingEntries/dss:RoutingEntry/dss:receiver_name"/>
+    <target property="receiver_name_from_dss" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:dss="http://ws.wso2.org/dataservice" xpath="//dss:RoutingEntries/dss:RoutingEntry/dss:receiver_username"/>
+    <target property="receiver_username_from_dss" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:dss="http://ws.wso2.org/dataservice" xpath="//dss:RoutingEntries/dss:RoutingEntry/dss:receiver_passwort"/>
+    <target property="receiver_passwort_from_dss" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:dss="http://ws.wso2.org/dataservice" xpath="//dss:RoutingEntries/dss:RoutingEntry/dss:source_application_name"/>
+    <target property="source_application_name_from_dss" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:dss="http://ws.wso2.org/dataservice" xpath="//dss:RoutingEntries/dss:RoutingEntry/dss:source_application_environment"/>
+    <target property="source_application_environment_from_dss" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:dss="http://ws.wso2.org/dataservice" xpath="//dss:RoutingEntries/dss:RoutingEntry/dss:messaging_service_id"/>
+    <target property="messaging_service_id_from_dss" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:dss="http://ws.wso2.org/dataservice" xpath="//dss:RoutingEntries/dss:RoutingEntry/dss:messaging_service_version"/>
+    <target property="messaging_service_version_from_dss" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:dss="http://ws.wso2.org/dataservice" xpath="//dss:RoutingEntries/dss:RoutingEntry/dss:messaging_service_operation"/>
+    <target property="messaging_service_operation_from_dss" type="property"/>
+  </enrich>
+  <log level="custom" separator="; ##">
+    <property expression="get-property('receiver_uri_from_dss')" name="receiver_uri_from_dss"/>
+    <property expression="get-property('receiver_name_from_dss')" name="receiver_name_from_dss"/>
+    <property expression="get-property('receiver_username_from_dss')" name="receiver_username_from_dss"/>
+    <property expression="get-property('receiver_passwort_from_dss')" name="receiver_passwort_from_dss"/>
+    <property
+      expression="get-property('source_application_name_from_dss')" name="source_application_name_from_dss"/>
+    <property
+      expression="get-property('source_application_environment_from_dss')" name="source_application_environment_from_dss"/>
+    <property expression="get-property('messaging_service_id_from_dss')" name="messaging_service_id_from_dss"/>
+    <property
+      expression="get-property('messaging_service_version_from_dss')" name="messaging_service_version_from_dss"/>
+    <property
+      expression="get-property('messaging_service_operation_from_dss')" name="messaging_service_operation_from_dss"/>
+  </log>
+</sequence>

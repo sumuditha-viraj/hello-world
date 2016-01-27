@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="EP2RoutingRulesService" groupId="ch.admin.estv.fiscalit.exchange.e2.endpoints-eislab.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/EP2RoutingRulesService.xml</file>
+    </artifact>
+    <artifact name="EP2SapBrokerAndBridgeServiceHttpsSoap" groupId="ch.admin.estv.fiscalit.exchange.e2.endpoints-eislab.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/EP2SapBrokerAndBridgeServiceHttpsSoap.xml</file>
+    </artifact>
+    <artifact name="EP2RoutingRulesServiceDssSoap" groupId="ch.admin.estv.fiscalit.exchange.e2.endpoints-eislab.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/EP2RoutingRulesServiceDssSoap.xml</file>
+    </artifact>
+    <artifact name="EP2RoutingRulesServiceDssJms" groupId="ch.admin.estv.fiscalit.exchange.e2.endpoints-eislab.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/EP2RoutingRulesServiceDssJms.xml</file>
+    </artifact>
+    <artifact name="EP2AuditLogService" groupId="ch.admin.estv.fiscalit.exchange.e2.endpoints-eislab.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/EP2AuditLogService.xml</file>
+    </artifact>
+</artifacts>

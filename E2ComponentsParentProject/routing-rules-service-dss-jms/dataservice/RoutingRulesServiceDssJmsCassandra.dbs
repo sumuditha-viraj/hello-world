@@ -1,0 +1,97 @@
+<data name="RoutingRulesServiceDssJmsCassandra" serviceGroup="" serviceNamespace="http://ws.wso2.org/dataservice" transports="https">
+    <description/>
+    <config id="default">
+        <property name="cassandraServers">10.135.158.187</property>
+        <property name="keyspace">RoutingRulesKeySpace</property>
+        <property name="port">9042</property>
+        <property name="compression">NONE</property>
+        <property name="user">admin</property>
+        <property name="username">admin</property>
+        <property name="password">admin</property>
+    </config>
+    <query id="getAllRoutingEntriesJmsClientsQuery" useConfig="default">
+        <expression>SELECT * FROM RoutingRulesKeySpace.RoutingDataJmsClients</expression>
+        <result element="RoutingEntries" rowName="RoutingEntry">
+            <element column="source_application_name" name="source_application_name" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="source_application_environment" name="source_application_environment" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_id" name="messaging_service_id" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_version" name="messaging_service_version" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_operation" name="messaging_service_operation" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_name" name="receiver_name" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_uri" name="receiver_uri" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_username" name="receiver_username" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_passwort" name="receiver_passwort" exportType="SCALAR" xsdType="xs:string"/>
+        </result>
+    </query>
+    <query id="getRoutingEntriesJmsClientsBySourceApplicationNameQuery" useConfig="default">
+        <expression>SELECT * FROM RoutingRulesKeySpace.RoutingDataJmsClients WHERE source_application_name = ?</expression>
+        <param name="source_application_name" ordinal="1" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <result element="RoutingEntries" rowName="RoutingEntry">
+            <element column="source_application_name" name="source_application_name" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="source_application_environment" name="source_application_environment" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_id" name="messaging_service_id" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_version" name="messaging_service_version" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_operation" name="messaging_service_operation" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_name" name="receiver_name" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_uri" name="receiver_uri" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_username" name="receiver_username" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_passwort" name="receiver_passwort" exportType="SCALAR" xsdType="xs:string"/>
+        </result>
+    </query>
+    <query id="getRoutingEntriesJmsClientsBySourceApplicationEnvironmentQuery" useConfig="default">
+        <expression>SELECT * FROM RoutingRulesKeySpace.RoutingDataJmsClients WHERE source_application_environment = ?</expression>
+        <param name="source_application_environment" ordinal="1" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <result element="RoutingEntries" rowName="RoutingEntry">
+            <element column="source_application_name" name="source_application_name" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="source_application_environment" name="source_application_environment" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_id" name="messaging_service_id" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_version" name="messaging_service_version" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_operation" name="messaging_service_operation" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_name" name="receiver_name" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_uri" name="receiver_uri" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_username" name="receiver_username" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_passwort" name="receiver_passwort" exportType="SCALAR" xsdType="xs:string"/>
+        </result>
+    </query>
+    <query id="getRoutingEntryJmsClientsQuery" useConfig="default">
+        <expression>SELECT * FROM RoutingRulesKeySpace.RoutingDataJmsClients WHERE source_application_name = ? AND source_application_environment = ? AND messaging_service_id = ? AND messaging_service_version = ? AND messaging_service_operation = ?</expression>
+        <param name="source_application_name" ordinal="1" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="source_application_environment" ordinal="2" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="messaging_service_id" ordinal="3" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="messaging_service_version" ordinal="4" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="messaging_service_operation" ordinal="5" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <result element="RoutingEntries" rowName="RoutingEntry">
+            <element column="source_application_name" name="source_application_name" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="source_application_environment" name="source_application_environment" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_id" name="messaging_service_id" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_version" name="messaging_service_version" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_operation" name="messaging_service_operation" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_name" name="receiver_name" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_uri" name="receiver_uri" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_username" name="receiver_username" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_passwort" name="receiver_passwort" exportType="SCALAR" xsdType="xs:string"/>
+        </result>
+    </query>
+    <operation name="getRoutingEntriesAll">
+        <call-query href="getAllRoutingEntriesJmsClientsQuery"/>
+    </operation>
+    <operation name="getRoutingEntriesBySourceApplicationName">
+        <call-query href="getRoutingEntriesJmsClientsBySourceApplicationNameQuery">
+            <with-param name="source_application_name" query-param="source_application_name"/>
+        </call-query>
+    </operation>
+    <operation name="getRoutingEntriesBySourceApplicationEnvironment">
+        <call-query href="getRoutingEntriesJmsClientsBySourceApplicationEnvironmentQuery">
+            <with-param name="source_application_environment" query-param="source_application_environment"/>
+        </call-query>
+    </operation>
+    <operation name="getRoutingEntry">
+        <call-query href="getRoutingEntryJmsClientsQuery">
+            <with-param name="source_application_name" query-param="source_application_name"/>
+            <with-param name="source_application_environment" query-param="source_application_environment"/>
+            <with-param name="messaging_service_id" query-param="messaging_service_id"/>
+            <with-param name="messaging_service_version" query-param="messaging_service_version"/>
+            <with-param name="messaging_service_operation" query-param="messaging_service_operation"/>
+        </call-query>
+    </operation>
+</data>

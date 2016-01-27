@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="RoutingRulesEP" groupId="ch.admin.estv.fiscalit.exchange.e2.routing-rules-service.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/RoutingRulesEP.xml</file>
+    </artifact>
+    <artifact name="RoutingRulesService" groupId="ch.admin.estv.fiscalit.exchange.e2.routing-rules-service.proxy-service" version="1.0.0" type="synapse/proxy-service" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/proxy-services/RoutingRulesService.xml</file>
+    </artifact>
+    <artifact name="RoutingRulesFaultHandler" groupId="ch.admin.estv.fiscalit.exchange.e2.routing-rules-service.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/RoutingRulesFaultHandler.xml</file>
+    </artifact>
+    <artifact name="RoutingRulesDssRequest" groupId="ch.admin.estv.fiscalit.exchange.e2.routing-rules-service.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/RoutingRulesDssRequest.xml</file>
+    </artifact>
+    <artifact name="RoutingRulesSendToDss" groupId="ch.admin.estv.fiscalit.exchange.e2.routing-rules-service.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/RoutingRulesSendToDss.xml</file>
+    </artifact>
+    <artifact name="RoutingRulesReceiveFromDss" groupId="ch.admin.estv.fiscalit.exchange.e2.routing-rules-service.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/RoutingRulesReceiveFromDss.xml</file>
+    </artifact>
+    <artifact name="RoutingRulesGDCTransformer" groupId="ch.admin.estv.fiscalit.exchange.e2.routing-rules-service.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/RoutingRulesGDCTransformer.xml</file>
+    </artifact>
+</artifacts>

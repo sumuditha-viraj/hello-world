@@ -1,0 +1,194 @@
+<data name="RoutingRulesServiceDssManagementCassandra" serviceGroup="" serviceNamespace="http://ws.wso2.org/dataservice" transports="https">
+    <description/>
+    <config id="default">
+        <property name="cassandraServers">10.135.158.187</property>
+        <property name="keyspace">RoutingRulesKeySpace</property>
+        <property name="port">9042</property>
+        <property name="compression">NONE</property>
+        <property name="user">admin</property>
+        <property name="username">admin</property>
+        <property name="password">admin</property>
+    </config>
+    <query id="createRoutingRulesKeySpaceQuery" useConfig="default">
+        <expression>CREATE KEYSPACE RoutingRulesKeySpace WITH replication = {'class':'SimpleStrategy', 'replication_factor':3}</expression>
+    </query>
+    <query id="deleteRoutingRulesKeySpaceQuery" useConfig="default">
+        <expression>DROP KEYSPACE RoutingRulesKeySpace</expression>
+    </query>
+    <query id="createRoutingDataSoapClientsTableQuery" useConfig="default">
+        <expression>CREATE TABLE RoutingRulesKeySpace.RoutingDataSoapClients (
+        source_application_name text, source_application_environment text, messaging_service_id text, messaging_service_version text, messaging_service_operation text, receiver_name text, receiver_uri text, receiver_username text, receiver_passwort text,
+        PRIMARY KEY (source_application_name, source_application_environment, messaging_service_id, messaging_service_version, messaging_service_operation))</expression>
+    </query>
+    <query id="deleteRoutingDataSoapClientsTableQuery" useConfig="default">
+        <expression>DROP TABLE RoutingRulesKeySpace.RoutingDataSoapClients</expression>
+    </query>
+    <query id="createRoutingDataJmsClientsTableQuery" useConfig="default">
+        <expression>CREATE TABLE RoutingRulesKeySpace.RoutingDataJmsClients (
+        source_application_name text, source_application_environment text, messaging_service_id text, messaging_service_version text, messaging_service_operation text, receiver_name text, receiver_uri text, receiver_username text, receiver_passwort text,
+        PRIMARY KEY (source_application_name, source_application_environment, messaging_service_id, messaging_service_version, messaging_service_operation))</expression>
+    </query>
+    <query id="deleteRoutingDataJmsClientsTableQuery" useConfig="default">
+        <expression>DROP TABLE RoutingRulesKeySpace.RoutingDataJmsClients</expression>
+    </query>
+    <query id="addRoutingEntryJmsClientsQuery" useConfig="default">
+        <expression>INSERT INTO RoutingRulesKeySpace.RoutingDataJmsClients (
+        source_application_name, source_application_environment, messaging_service_id, messaging_service_version, messaging_service_operation, receiver_name, receiver_uri, receiver_username, receiver_passwort) values (?,?,?,?,?,?,?,?,?)</expression>
+        <param name="source_application_name" ordinal="1" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="source_application_environment" ordinal="2" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="messaging_service_id" ordinal="3" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="messaging_service_version" ordinal="4" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="messaging_service_operation" ordinal="5" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="receiver_name" ordinal="6" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="receiver_uri" ordinal="7" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="receiver_username" ordinal="8" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="receiver_passwort" ordinal="9" paramType="SCALAR" sqlType="STRING" type="IN"/>
+    </query>
+    <query id="removeRoutingEntryJmsClientsQuery" useConfig="default">
+        <expression>DELETE FROM RoutingRulesKeySpace.RoutingDataJmsClients WHERE 
+        source_application_name = ? AND source_application_environment = ? AND messaging_service_id = ? AND
+        messaging_service_version = ? AND messaging_service_operation = ? AND receiver_name = ? AND receiver_uri = ? 
+        AND receiver_username = ? AND receiver_passwort = ?</expression>
+        <param name="source_application_name" ordinal="1" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="source_application_environment" ordinal="2" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="messaging_service_id" ordinal="3" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="messaging_service_version" ordinal="4" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="messaging_service_operation" ordinal="5" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="receiver_name" ordinal="6" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="receiver_uri" ordinal="7" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="receiver_username" ordinal="8" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="receiver_passwort" ordinal="9" paramType="SCALAR" sqlType="STRING" type="IN"/>
+    </query>
+    <query id="addRoutingEntrySoapClientsQuery" useConfig="default">
+        <expression>INSERT INTO RoutingRulesKeySpace.RoutingDataSoapClients (
+        source_application_name, source_application_environment, messaging_service_id, messaging_service_version, messaging_service_operation, receiver_name, receiver_uri, receiver_username, receiver_passwort) values (?,?,?,?,?,?,?,?,?)</expression>
+        <param name="source_application_name" ordinal="1" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="source_application_environment" ordinal="2" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="messaging_service_id" ordinal="3" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="messaging_service_version" ordinal="4" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="messaging_service_operation" ordinal="5" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="receiver_name" ordinal="6" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="receiver_uri" ordinal="7" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="receiver_username" ordinal="8" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="receiver_passwort" ordinal="9" paramType="SCALAR" sqlType="STRING" type="IN"/>
+    </query>
+    <query id="removeRoutingEntrySoapClientsQuery" useConfig="default">
+        <expression>DELETE FROM RoutingRulesKeySpace.RoutingDataSoapClients WHERE 
+        source_application_name = ? AND source_application_environment = ? AND messaging_service_id = ? AND
+        messaging_service_version = ? AND messaging_service_operation = ? AND receiver_name = ? AND receiver_uri = ?
+        AND receiver_username = ? AND receiver_passwort = ?</expression>
+        <param name="source_application_name" ordinal="1" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="source_application_environment" ordinal="2" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="messaging_service_id" ordinal="3" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="messaging_service_version" ordinal="4" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="messaging_service_operation" ordinal="5" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="receiver_name" ordinal="6" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="receiver_uri" ordinal="7" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="receiver_username" ordinal="8" paramType="SCALAR" sqlType="STRING" type="IN"/>
+        <param name="receiver_passwort" ordinal="9" paramType="SCALAR" sqlType="STRING" type="IN"/>
+    </query>
+    <query id="getAllRoutingEntriesSoapClientsQuery" useConfig="default">
+        <expression>SELECT * FROM RoutingRulesKeySpace.RoutingDataSoapClients</expression>
+        <result element="RoutingEntries" rowName="RoutingEntry">
+            <element column="source_application_name" name="source_application_name" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="source_application_environment" name="source_application_environment" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_id" name="messaging_service_id" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_version" name="messaging_service_version" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_operation" name="messaging_service_operation" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_name" name="receiver_name" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_uri" name="receiver_uri" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_username" name="receiver_username" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_passwort" name="receiver_passwort" exportType="SCALAR" xsdType="xs:string"/>
+        </result>
+    </query>
+    <query id="getAllRoutingEntriesJmsClientsQuery" useConfig="default">
+        <expression>SELECT * FROM RoutingRulesKeySpace.RoutingDataJmsClients</expression>
+        <result element="RoutingEntries" rowName="RoutingEntry">
+            <element column="source_application_name" name="source_application_name" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="source_application_environment" name="source_application_environment" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_id" name="messaging_service_id" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_version" name="messaging_service_version" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="messaging_service_operation" name="messaging_service_operation" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_name" name="receiver_name" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_uri" name="receiver_uri" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_username" name="receiver_username" exportType="SCALAR" xsdType="xs:string"/>
+            <element column="receiver_passwort" name="receiver_passwort" exportType="SCALAR" xsdType="xs:string"/>
+        </result>
+    </query>
+    <operation name="ZcreateRoutingRulesKeySpace">
+        <call-query href="createRoutingRulesKeySpaceQuery"/>
+    </operation>
+    <operation name="ZdeleteRoutingRulesKeySpace">
+        <call-query href="deleteRoutingRulesKeySpaceQuery"/>
+    </operation>
+    <operation name="ScreateRoutingDataSoapClientsTable">
+        <call-query href="createRoutingDataSoapClientsTableQuery"/>
+    </operation>
+    <operation name="SdeleteRoutingDataSoapClientsTable">
+        <call-query href="deleteRoutingDataSoapClientsTableQuery"/>
+    </operation>
+    <operation name="JcreateRoutingDataJmsClientsTable">
+        <call-query href="createRoutingDataJmsClientsTableQuery"/>
+    </operation>
+    <operation name="JdeleteRoutingDataJmsClientsTable">
+        <call-query href="deleteRoutingDataJmsClientsTableQuery"/>
+    </operation>
+    <operation name="JaddRoutingEntryJmsClients">
+        <call-query href="addRoutingEntryJmsClientsQuery">
+            <with-param name="source_application_name" query-param="source_application_name"/>
+            <with-param name="source_application_environment" query-param="source_application_environment"/>
+            <with-param name="messaging_service_id" query-param="messaging_service_id"/>
+            <with-param name="messaging_service_version" query-param="messaging_service_version"/>
+            <with-param name="messaging_service_operation" query-param="messaging_service_operation"/>
+            <with-param name="receiver_name" query-param="receiver_name"/>
+            <with-param name="receiver_uri" query-param="receiver_uri"/>
+            <with-param name="receiver_username" query-param="receiver_username"/>
+            <with-param name="receiver_passwort" query-param="receiver_passwort"/>
+        </call-query>
+    </operation>
+    <operation name="JremoveRoutingEntryJmsClients">
+        <call-query href="removeRoutingEntryJmsClientsQuery">
+            <with-param name="source_application_name" query-param="source_application_name"/>
+            <with-param name="source_application_environment" query-param="source_application_environment"/>
+            <with-param name="messaging_service_id" query-param="messaging_service_id"/>
+            <with-param name="messaging_service_version" query-param="messaging_service_version"/>
+            <with-param name="messaging_service_operation" query-param="messaging_service_operation"/>
+            <with-param name="receiver_name" query-param="receiver_name"/>
+            <with-param name="receiver_uri" query-param="receiver_uri"/>
+            <with-param name="receiver_username" query-param="receiver_username"/>
+            <with-param name="receiver_passwort" query-param="receiver_passwort"/>
+        </call-query>
+    </operation>
+    <operation name="SaddRoutingEntrySoapClients">
+        <call-query href="addRoutingEntrySoapClientsQuery">
+            <with-param name="source_application_name" query-param="source_application_name"/>
+            <with-param name="source_application_environment" query-param="source_application_environment"/>
+            <with-param name="messaging_service_id" query-param="messaging_service_id"/>
+            <with-param name="messaging_service_version" query-param="messaging_service_version"/>
+            <with-param name="messaging_service_operation" query-param="messaging_service_operation"/>
+            <with-param name="receiver_name" query-param="receiver_name"/>
+            <with-param name="receiver_uri" query-param="receiver_uri"/>
+            <with-param name="receiver_username" query-param="receiver_username"/>
+            <with-param name="receiver_passwort" query-param="receiver_passwort"/>
+        </call-query>
+    </operation>
+    <operation name="SremoveRoutingEntrySoapClients">
+        <call-query href="removeRoutingEntrySoapClientsQuery">
+            <with-param name="source_application_name" query-param="source_application_name"/>
+            <with-param name="source_application_environment" query-param="source_application_environment"/>
+            <with-param name="messaging_service_id" query-param="messaging_service_id"/>
+            <with-param name="messaging_service_version" query-param="messaging_service_version"/>
+            <with-param name="messaging_service_operation" query-param="messaging_service_operation"/>
+            <with-param name="receiver_name" query-param="receiver_name"/>
+            <with-param name="receiver_uri" query-param="receiver_uri"/>
+            <with-param name="receiver_username" query-param="receiver_username"/>
+            <with-param name="receiver_passwort" query-param="receiver_passwort"/>
+        </call-query>
+    </operation>
+    <operation name="JgetRoutingEntriesJmsClientsAll">
+        <call-query href="getAllRoutingEntriesJmsClientsQuery"/>
+    </operation>
+    <operation name="SgetRoutingEntriesSoapClientsAll">
+        <call-query href="getAllRoutingEntriesSoapClientsQuery"/>
+    </operation>
+</data>

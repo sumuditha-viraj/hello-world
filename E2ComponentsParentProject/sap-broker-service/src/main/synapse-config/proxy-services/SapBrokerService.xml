@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="SapBrokerService" startOnLoad="true" trace="disable"
+  transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+  <target faultSequence="SapBrokerServiceFaultHandler">
+    <inSequence>
+      <log level="custom" separator=",">
+        <property name="SapBrokerAndBridgeServiceHttpsSoap" value="inSequence called"/>
+      </log>
+      <!-- GDC Message received -->
+      <!-- Read Operation inside the GDC to decide which SAP Service to call -->
+      <!-- TODO create service for SAP Operation -->
+      <!-- TODO replace the enrich with <property> -->
+      <enrich>
+        <source clone="true"
+          xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:name"/>
+        <target property="receiver_name" type="property"/>
+      </enrich>
+      <enrich>
+        <source clone="true"
+          xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:address"/>
+        <target property="receiver_address" type="property"/>
+      </enrich>
+      <enrich>
+        <source clone="true"
+          xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:username"/>
+        <target property="receiver_username" type="property"/>
+      </enrich>
+      <enrich>
+        <source clone="true"
+          xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:passwort"/>
+        <target property="receiver_passwort" type="property"/>
+      </enrich>
+      <log level="custom">
+        <property expression="get-property('receiver_name')" name="receiver_name set with value from DSS ruting rules"/>
+        <property expression="get-property('receiver_address')" name="receiver_address set with value from DSS ruting rules"/>
+        <property expression="get-property('receiver_username')" name="receiver_username set with value from DSS ruting rules"/>
+        <property expression="get-property('receiver_passwort')" name="receiver_passwort set with value from DSS ruting rules"/>
+      </log>
+      <!-- backup of the original GDC request -->
+      <enrich>
+        <source clone="true" type="body"/>
+        <target property="RequestBackupAfterAddingTheReceiver" type="property"/>
+      </enrich>
+      <!-- put only payload (SAP REquest) of the GDC into the body (which means the GDC Header has been removed) -->
+      <enrich>
+        <source clone="true"
+          xmlns:sap="http://estv.admin.ch/fiscal/exchange/sap" xpath="//sap:payload/child::node()"/>
+        <target type="body"/>
+      </enrich>
+      <!-- Remove Namespaces from SAP Request -->
+      <xslt key="SapBrokerServiceXsltRemoveNameSpace"/>
+      <log level="custom">
+        <property expression="$body" name="body after filtering of payload and SapBrokerAndBridgeServiceXsltRemoveNameSpace"/>
+      </log>
+      <!-- Prepare Username / Password for SAP Call -->
+      <property
+        expression="fn:concat(get-property('receiver_username'),':', get-property('receiver_passwort'))"
+        name="UserNamePasswort" scope="default" type="STRING"/>
+      <log level="custom">
+        <property expression="get-property('UserNamePasswort')" name="UserNamePasswort"/>
+      </log>
+      <!-- Prepare SAP SOAP Call -->
+      <!-- <property name="FORCE_ERROR_ON_SOAP_FAULT" scope="default"
+    type="STRING" value="true"/>  -->
+      <property name="HTTP_METHOD" scope="axis2" type="STRING" value="POST"/>
+      <property name="messageType" scope="axis2" type="STRING" value="text/xml"/>
+      <header name="Action" scope="default" value="http://sap.com/xi/WebService/soap1.1"/>
+      <property name="SOAPAction" scope="transport" type="STRING" value="http://sap.com/xi/WebService/soap1.1"/>
+      <property
+        expression="fn:concat('Basic ', base64Encode(get-property('UserNamePasswort')))"
+        name="Authorization" scope="transport" type="STRING"/>
+      <header expression="get-property('receiver_address')" name="To" scope="default"/>
+      <!-- SAP.Webservices.KUBU.Username=[ZT18_KUBU]
+SAP.Webservices.KUBU.Password=[k/wZkQyq=qv7]
+SAP.Webservices.PAM.Username=[ZT18_PAM]
+SAP.Webservices.PAM.Password=[~cDge7%gRwE{] -->
+      <call>
+        <endpoint key="SapBrokerAndBridgeServiceEP"/>
+      </call>
+      <log level="custom" separator=",">
+        <property name="SapBrokerAndBridgeSendReqToSAP" value="response from SAP"/>
+      </log>
+      <!-- backup the SAP Response -->
+      <enrich>
+        <source clone="true" type="body"/>
+        <target property="ResponseBackup" type="property"/>
+      </enrich>
+      <!-- Create the GDC response -->
+      <!-- TODO replace with simple XSLT -->
+      <sequence key="SapBrokerAndBridgeGDCTransformer"/>
+      <log level="custom" separator=",">
+        <property name="SapBrokerAndBridgeSendReqToSAP" value="Sequence SapBrokerAndBridgeGDCTransformer finished - Response Payload added to orig Request and ApplicationID changed to SAP."/>
+      </log>
+      <!-- Respond the GDC response containing the SAP response -->
+      <respond/>
+    </inSequence>
+    <outSequence>
+      <log level="custom" separator=",">
+        <property name="SapBrokerAndBridgeServiceHttpsSoap" value="outSequence called"/>
+      </log>
+    </outSequence>
+  </target>
+</proxy>

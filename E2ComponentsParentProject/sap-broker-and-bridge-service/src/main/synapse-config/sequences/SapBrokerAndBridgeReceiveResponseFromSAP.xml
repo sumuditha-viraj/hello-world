@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="SapBrokerAndBridgeReceiveResponseFromSAP"
+  trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+  <log level="custom" separator=",">
+    <property name="SapBrokerAndBridgeReceiveResponseFromSAP" value="inSequence called"/>
+  </log>
+  <log level="custom" separator=",">
+    <property name="SapBrokerAndBridgeReceiveResponseFromSAP" value="response from SAP"/>
+  </log>
+  <log level="full"/>
+  <enrich>
+    <source clone="true" type="body"/>
+    <target property="ResponseBackup" type="property"/>
+  </enrich>
+  <sequence key="SapBrokerAndBridgeGDCTransformer"/>
+  <log level="custom" separator=",">
+    <property name="SapBrokerAndBridgeReceiveResponseFromSAP" value="Sequence SapBrokerAndBridgeGDCTransformer finished - Response Payload added to orig Request and ApplicationID changed to SAP."/>
+  </log>
+</sequence>

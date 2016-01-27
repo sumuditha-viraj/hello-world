@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="RoutingRulesDssRequest" statistics="enable"
+  trace="enable" xmlns="http://ws.apache.org/ns/synapse">
+  <log level="custom">
+    <property name="RoutingRulesDssRequest" value="inSequence"/>
+  </log>
+  <property name="FORCE_ERROR_ON_SOAP_FAULT" scope="default"
+    type="STRING" value="true"/>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:business/fiscal:source/fiscal:application/fiscal:name"/>
+    <target property="source_application_name" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:business/fiscal:source/fiscal:application/fiscal:environment"/>
+    <target property="source_application_environment" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:service/fiscal:id"/>
+    <target property="messaging_service_id" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:service/fiscal:version"/>
+    <target property="messaging_service_version" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:service/fiscal:operation"/>
+    <target property="messaging_service_operation" type="property"/>
+  </enrich>
+  <log level="custom" separator="; ##">
+    <property expression="get-property('source_application_name')" name="source_application_name"/>
+    <property
+      expression="get-property('source_application_environment')" name="source_application_environment"/>
+    <property expression="get-property('messaging_service_id')" name="messaging_service_id"/>
+    <property expression="get-property('messaging_service_version')" name="messaging_service_version"/>
+    <property expression="get-property('messaging_service_operation')" name="messaging_service_operation"/>
+  </log>
+  <header name="Action" scope="default" value="urn:getRoutingEntry"/>
+  <payloadFactory media-type="xml">
+    <format>
+      <soapenv:Envelope xmlns:dat="http://ws.wso2.org/dataservice" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+        <soapenv:Header/>
+        <soapenv:Body>
+          <dat:getRoutingEntry>
+            <dat:source_application_name>$1</dat:source_application_name>
+            <dat:source_application_environment>$2</dat:source_application_environment>
+            <dat:messaging_service_id>$3</dat:messaging_service_id>
+            <dat:messaging_service_version>$4</dat:messaging_service_version>
+            <dat:messaging_service_operation>$5</dat:messaging_service_operation>
+          </dat:getRoutingEntry>
+        </soapenv:Body>
+      </soapenv:Envelope>
+    </format>
+    <args>
+      <arg evaluator="xml" expression="get-property('source_application_name')"/>
+      <arg evaluator="xml" expression="get-property('source_application_environment')"/>
+      <arg evaluator="xml" expression="get-property('messaging_service_id')"/>
+      <arg evaluator="xml" expression="get-property('messaging_service_version')"/>
+      <arg evaluator="xml" expression="get-property('messaging_service_operation')"/>
+    </args>
+  </payloadFactory>
+</sequence>

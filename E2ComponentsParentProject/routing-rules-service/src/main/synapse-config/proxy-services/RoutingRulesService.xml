@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="RoutingRulesService" startOnLoad="true" statistics="enable"
+  trace="enable" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+  <target faultSequence="RoutingRulesFaultHandler">
+    <inSequence>
+      <log level="custom" separator=",">
+        <property name="RoutingRulesService" value="inSequence called"/>
+      </log>
+      <!-- Braucht es dieses Backup? -->
+      <enrich>
+        <source clone="true" type="body"/>
+        <target property="OriginRequestBackup" type="property"/>
+      </enrich>
+      <log level="custom">
+        <property expression="$body" name="original request body restored from cloned OriginRequestBackup"/>
+      </log>
+      <sequence key="RoutingRulesDssRequest"/>
+      <log level="custom">
+        <property name="RoutingRulesService" value="Sequence RoutingRulesDssRequest done, dss request built"/>
+      </log>
+      <sequence key="RoutingRulesSendToDss"/>
+      <log level="custom">
+        <property name="RoutingRulesService" value="Sequence RoutingRulesSendToDss done, dss response received"/>
+      </log>
+      <sequence key="RoutingRulesReceiveFromDss"/>
+      <log level="custom">
+        <property name="RoutingRulesService" value="Sequence RoutingRulesReceiveFromDss done"/>
+      </log>
+      <sequence key="RoutingRulesGDCTransformer"/>
+      <log level="custom">
+        <property name="RoutingRulesService" value="Sequence RoutingRulesGDCTransformer done, response added to orig request body"/>
+      </log>
+      <log category="DEBUG" level="full"/>
+      <respond/>
+    </inSequence>
+    <outSequence>
+      <log level="custom" separator=",">
+        <property name="RoutingRulesService" value="outSequence called"/>
+      </log>
+    </outSequence>
+  </target>
+</proxy>

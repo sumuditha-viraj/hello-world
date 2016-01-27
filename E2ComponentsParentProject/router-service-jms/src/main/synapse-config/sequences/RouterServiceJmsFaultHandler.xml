@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="RouterServiceJmsFaultHandler" statistics="enable"
+  trace="enable" xmlns="http://ws.apache.org/ns/synapse">
+  <property name="SET_ROLLBACK_ONLY" scope="axis2" type="STRING" value="true"/>
+  <log level="custom">
+    <property expression="$ctx:ERROR_MESSAGE" name="Rollback because of exception"/>
+  </log>
+  <log level="custom">
+    <property name="RouterServiceJmsFaultHandler" value="Sequence called"/>
+    <property name="text" value="An unexpected error occured"/>
+    <property expression="$ctx:ERROR_MESSAGE" name="Error because of exception"/>
+    <property expression="get-property('ERROR_MESSAGE')" name="message"/>
+    <property expression="get-property('ERROR_CODE')" name="code"/>
+    <property expression="get-property('ERROR_DETAIL')" name="detail"/>
+    <property expression="$ctx:ERROR_EXCEPTION" name="exception"/>
+    <property expression="get-property('Action')" name="Action"/>
+  </log>
+</sequence>

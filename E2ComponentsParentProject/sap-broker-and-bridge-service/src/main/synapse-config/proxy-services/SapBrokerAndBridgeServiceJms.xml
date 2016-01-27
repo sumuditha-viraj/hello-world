@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="SapBrokerAndBridgeServiceJms" startOnLoad="true"
+  trace="disable" transports="jms" xmlns="http://ws.apache.org/ns/synapse">
+  <target faultSequence="SapBrokerAndBridgeServiceFaultHandler">
+    <inSequence>
+      <log level="custom" separator=",">
+        <property name="SapBrokerAndBridgeServiceJms" value="inSequence called"/>
+      </log>
+      <sequence key="SapBrokerAndBridgeSendReqToSAP"/>
+      <property name="OUT_ONLY" scope="default" type="STRING" value="true"/>
+      <property name="FORCE_SC_ACCEPTED" scope="axis2" type="STRING" value="true"/>
+      <property name="messageType" scope="axis2" type="STRING" value="text/xml"/>
+      <property name="ContentType" scope="axis2" type="STRING" value="text/xml"/>
+      <header name="To" scope="default" value="jms:/E2InQueue?transport.jms.DestinationType=queue"/>
+      <call>
+        <endpoint key="SapBrokerAndBridgeServiceEP"/>
+      </call>
+      <log level="custom" separator=",">
+        <property name="SapBrokerAndBridgeServiceJms" value="SAP Response sent to E2InQueue"/>
+      </log>
+    </inSequence>
+    <outSequence>
+      <log level="custom" separator=",">
+        <property name="SapBrokerAndBridgeServiceJms" value="outSequence called"/>
+      </log>
+    </outSequence>
+  </target>
+  <parameter name="transport.jms.ContentType">
+    <rules>
+      <jmsProperty>contentType</jmsProperty>
+      <default>text/xml</default>
+    </rules>
+  </parameter>
+  <parameter name="transport.jms.Destination">OutQueue_SAP</parameter>
+</proxy>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="AuditLogService" startOnLoad="true" statistics="enable"
+  trace="enable" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+  <target>
+    <inSequence>
+      <log level="custom" separator=",">
+        <property name="AuditLogService" value="inSequence START"/>
+      </log>
+      <!-- Original-Body backupen -->
+      <!-- wird er als Property gespeichert gibt es spaeter (unten) beim wieder abfuellen Probleme
+      <property expression="$body/fis:GDC" name="backup_body_dollar"
+        scope="default" type="STRING" xmlns:fis="http://estv.admin.ch/fiscal/v1_0"/>
+      -->
+      <enrich>
+        <source clone="true" type="body"/>
+        <target property="body_backup" type="property"/>
+      </enrich>
+      <!-- Header aus dem GDC rausfiltern... -->
+      <enrich>
+        <source clone="true"
+          xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:header"/>
+        <target property="gdc_header" type="property"/>
+      </enrich>
+      <!-- ... und in den Body setzen -->
+      <enrich>
+        <source clone="true" property="gdc_header" type="property"/>
+        <target type="body"/>
+      </enrich>
+      <!-- Header nun in die Queue ablegen -->
+      <property name="OUT_ONLY" scope="default" type="STRING" value="true"/>
+      <property name="FORCE_SC_ACCEPTED" scope="axis2" type="STRING" value="true"/>
+      <property name="messageType" scope="axis2" type="STRING" value="text/xml"/>
+      <property name="ContentType" scope="axis2" type="STRING" value="text/xml"/>
+      <header name="To" scope="default" value="jms:/OutQueue_SNAKE?transport.jms.DestinationType=queue"/>
+      <call>
+        <endpoint>
+          <default trace="disable">
+            <timeout>
+              <duration>300000</duration>
+              <responseAction>fault</responseAction>
+            </timeout>
+            <suspendOnFailure>
+              <errorCodes>-1</errorCodes>
+              <initialDuration>0</initialDuration>
+              <progressionFactor>1.0</progressionFactor>
+              <maximumDuration>0</maximumDuration>
+            </suspendOnFailure>
+            <markForSuspension>
+              <errorCodes>-1</errorCodes>
+            </markForSuspension>
+          </default>
+        </endpoint>
+      </call>
+      <!-- Den Original-Body wieder einfuegen -->
+      <enrich>
+        <source clone="true" property="body_backup" type="property"/>
+        <target type="body"/>
+      </enrich>
+      <log level="custom" separator=",">
+        <property name="AuditLogService" value="inSequence ENDE"/>
+      </log>
+    </inSequence>
+    <outSequence/>
+    <faultSequence/>
+  </target>
+</proxy>

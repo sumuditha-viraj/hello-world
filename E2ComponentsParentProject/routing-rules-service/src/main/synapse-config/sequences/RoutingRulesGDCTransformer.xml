@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="RoutingRulesGDCTransformer" statistics="enable"
+  trace="enable" xmlns="http://ws.apache.org/ns/synapse">
+  <log level="custom">
+    <property name="RoutingRulesGDCTransformer" value="Sequence called"/>
+  </log>
+  <property
+    expression="//dss:RoutingEntries/dss:RoutingEntry/dss:receiver_uri"
+    name="receiver_uri_from_dss" scope="default" type="STRING" xmlns:dss="http://ws.wso2.org/dataservice"/>
+  <property
+    expression="//dss:RoutingEntries/dss:RoutingEntry/dss:receiver_name"
+    name="receiver_name_from_dss" scope="default" type="STRING" xmlns:dss="http://ws.wso2.org/dataservice"/>
+  <property
+    expression="//dss:RoutingEntries/dss:RoutingEntry/dss:receiver_username"
+    name="receiver_username_from_dss" scope="default" type="STRING" xmlns:dss="http://ws.wso2.org/dataservice"/>
+  <property
+    expression="//dss:RoutingEntries/dss:RoutingEntry/dss:receiver_passwort"
+    name="receiver_passwort_from_dss" scope="default" type="STRING" xmlns:dss="http://ws.wso2.org/dataservice"/>
+  <log level="custom">
+    <property expression="get-property('receiver_uri_from_dss')" name="receiver_uri_from_dss"/>
+    <property expression="get-property('receiver_name_from_dss')" name="receiver_name_from_dss"/>
+    <property expression="get-property('receiver_username_from_dss')" name="receiver_username_from_dss"/>
+    <property expression="get-property('receiver_passwort_from_dss')" name="receiver_passwort_from_dss"/>
+  </log>
+  <!-- Warum wird das gemacht? Der Body wurde doch gar nicht verändert, oder? -->
+  <enrich>
+    <source clone="true" property="OriginRequestBackup" type="property"/>
+    <target type="body"/>
+  </enrich>
+  <log level="custom">
+    <property expression="$body" name="original request body restored from cloned OriginRequestBackup"/>
+  </log>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:name"/>
+    <target property="receiver_name" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:address"/>
+    <target property="receiver_address" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:username"/>
+    <target property="receiver_username" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:passwort"/>
+    <target property="receiver_passwort" type="property"/>
+  </enrich>
+  <log level="custom">
+    <property expression="get-property('receiver_name')" name="receiver_name from original request"/>
+    <property expression="get-property('receiver_address')" name="receiver_address from original request"/>
+  </log>
+  <enrich>
+    <source clone="true" property="receiver_name_from_dss" type="property"/>
+    <target xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:name"/>
+  </enrich>
+  <enrich>
+    <source clone="true" property="receiver_uri_from_dss" type="property"/>
+    <target xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:address"/>
+  </enrich>
+  <enrich>
+    <source clone="true" property="receiver_username_from_dss" type="property"/>
+    <target xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:username"/>
+  </enrich>
+  <enrich>
+    <source clone="true" property="receiver_passwort_from_dss" type="property"/>
+    <target xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:passwort"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:name"/>
+    <target property="receiver_name_changed_in_GDC_from_dss" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:address"/>
+    <target property="receiver_address_changed_in_GDC_from_dss" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:username"/>
+    <target property="receiver_username_changed_in_GDC_from_dss" type="property"/>
+  </enrich>
+  <enrich>
+    <source clone="true" xmlns:fiscal="http://estv.admin.ch/fiscal/v1_0" xpath="//fiscal:messaging/fiscal:receiver/fiscal:application/fiscal:passwort"/>
+    <target property="receiver_passwort_changed_in_GDC_from_dss" type="property"/>
+  </enrich>
+  <log level="custom">
+    <property
+      expression="get-property('receiver_name_changed_in_GDC_from_dss')" name="receiver_name_changed_in_GDC_from_dss"/>
+    <property
+      expression="get-property('receiver_address_changed_in_GDC_from_dss')" name="receiver_address_changed_in_GDC_from_dss"/>
+    <property
+      expression="get-property('receiver_username_changed_in_GDC_from_dss')" name="receiver_username_changed_in_GDC_from_dss"/>
+    <property
+      expression="get-property('receiver_passwort_changed_in_GDC_from_dss')" name="receiver_passwort_changed_in_GDC_from_dss"/>
+  </log>
+  <log level="custom">
+    <property expression="$body" name="RoutingRulesGDCTransformer request body"/>
+  </log>
+</sequence>

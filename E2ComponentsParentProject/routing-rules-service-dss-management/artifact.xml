@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="RoutingRulesServiceDssManagement" groupId="ch.admin.estv.fiscalit.exchange.e2.routing-rules-service-dss-management.dataservice" version="1.0.0" type="service/dataservice" serverRole="DataServicesServer">
+        <file>dataservice/RoutingRulesServiceDssManagement.dbs</file>
+    </artifact>
+    <artifact name="RoutingRulesServiceDssManagementCassandra" groupId="ch.admin.estv.fiscalit.exchange.e2.routing-rules-service-dss-management.dataservice" version="1.0.0" type="service/dataservice" serverRole="DataServicesServer">
+        <file>dataservice/RoutingRulesServiceDssManagementCassandra.dbs</file>
+    </artifact>
+</artifacts>
