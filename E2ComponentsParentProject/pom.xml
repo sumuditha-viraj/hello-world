@@ -20,6 +20,7 @@
     <module>endpoints-niesen</module>
     <module>sap-bridge-service-jms</module>
     <module>auditlog-service</module>
+    <module>viraj</module>
     <module>auditlog-service-car</module>
     <module>sap-bridge-service-jms-car</module>
     <module>endpoints-niesen-car</module>
